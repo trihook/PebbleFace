@@ -1,0 +1,36 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "trihook@163.com",
+    "longName": "myWatchFace",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "images/bt.png",
+                "name": "IMAGE_BT",
+                "type": "png-trans"
+            },
+            {
+                "file": "images/background.png",
+                "name": "IMAGE_BACKGROUND",
+                "type": "png"
+            },
+            {
+                "file": "fonts/perfect-dos-vga.ttf",
+                "name": "FONT_PERFECT_DOS_48",
+                "type": "font"
+            }
+        ]
+    },
+    "sdkVersion": "2",
+    "shortName": "myWatchFace",
+    "uuid": "1db84021-1b20-42d3-a246-df9d45f6dfb8",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
