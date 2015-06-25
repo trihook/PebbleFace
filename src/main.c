@@ -2,10 +2,25 @@
 #include "progressbar.h"
 #include "main_face1.h"  
 
-  
 // 函数定义
 static void update_time();
 static void handler_init();
+
+
+char date_text[32];
+char hour_minutes_text[] = "00:00";
+char seconds_text[] = ":00";
+char ampm_text[] = "AM";
+
+// This was the time at the last call to update_time().
+// This is initialized with impossible values to ensure all layers are updated
+// on the first call to update_time().
+struct tm last_time = {-1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0};
+// State of clock_is_24h_style() at the last call to update_time().
+// We don't care about the initial value of this because the difference
+// in last_time will cause everything to be updated.
+bool last_24hr;
+
 
 
 // time tick 处理  
@@ -51,6 +66,8 @@ static void bt_handler(bool connected) {
 
 
 // 时间更新
+
+/*
 static void update_time()
 {
   // Get a tm structure
@@ -59,7 +76,7 @@ static void update_time()
 
   // Create a long-lived buffer
   static char buffer[] = "00:00";
-
+  
   // Write the current hours and minutes into the buffer
   if(clock_is_24h_style() == true) {
     // Use 24 hour format
@@ -71,21 +88,88 @@ static void update_time()
   // Display this time on the TextLayer
   text_layer_set_text(s_textlayer_time, buffer);
 }
+*/
+
+
+void update_time(void)
+{
+    time_t temp = time(NULL); 
+    struct tm *time = localtime(&temp);
+    // Update text layers for time fields that have changed.
+    // Month and day.
+    if (time->tm_mon != last_time.tm_mon || time->tm_mday != last_time.tm_mday)
+    {
+        strftime(date_text, sizeof(date_text), "%A\n%B %e", time);
+        text_layer_set_text(s_textlayer_date, date_text);
+    }
+
+    bool is_24hr = clock_is_24h_style();
+
+    // Hour and minute.
+    if (time->tm_hour != last_time.tm_hour || time->tm_sec != last_time.tm_sec || is_24hr != last_24hr)
+    {
+        // Use snprintf instead of strftime() to get the right padding.
+        const char *time_format;
+        int hour = time->tm_hour;
+        if (is_24hr)
+        {
+            // 24-hour style.
+            // Hour is zero-padded.
+            time_format = "%02d:%02d";
+        } else {
+            // 12-hour style.
+            // Hour has no padding.
+            time_format = "%d:%02d";
+            if (hour == 0)
+            {
+                // Midnight.
+                hour = 12;
+            } else if (hour > 12)
+            {
+                hour -= 12;
+            }
+        }
+        snprintf(hour_minutes_text, sizeof(hour_minutes_text), time_format, hour, time->tm_min);
+        text_layer_set_text(s_textlayer_time, hour_minutes_text);
+    }
+
+    // AM/PM (blank for 24-hour style).
+    if (time->tm_hour != last_time.tm_hour || is_24hr != last_24hr)
+    {
+        if (is_24hr)
+        {
+            text_layer_set_text(s_textlayer_ampm, "");
+        } else {
+            strftime(ampm_text, sizeof(ampm_text), "%p", time);
+            text_layer_set_text(s_textlayer_ampm, ampm_text);
+        }
+    }
+
+    // Seconds.
+    if (time->tm_sec != last_time.tm_sec)
+    {
+        strftime(seconds_text, sizeof(seconds_text), ":%S", time);
+        text_layer_set_text(s_textlayer_second, seconds_text);
+    }
+
+    // Save state for next time.
+    last_time = *time;
+    last_24hr = is_24hr;
+}
 
 
 // handler 初始化
 static void handler_init(void)
 {
+  update_time();
   // Register with TickTimerService
-  tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+  tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
   // Subscribe to the Battery State Service
   battery_state_service_subscribe(battery_handler);
   // Subscribe to Bluetooth updates
   bluetooth_connection_service_subscribe(bt_handler);
   // Make sure the time is displayed from the start
-  update_time();
 } 
-
 
 void init() 
 {

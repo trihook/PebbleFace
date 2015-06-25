@@ -8,10 +8,13 @@ static Window *s_window;
 static GFont s_res_font_perfect_dos_48;
 static GFont s_res_gothic_18;
 static GBitmap *s_res_image_bt_white;
+static GFont s_res_roboto_condensed_21;
 static TextLayer *s_textlayer_time;
 static TextLayer *s_textlayer_battery;
 static BitmapLayer *s_bitmaplayer_bt;
 static Layer *s_layer_main;
+static TextLayer *s_textlayer_date;
+static TextLayer *s_textlayer_ampm;
 
 static void initialise_ui(void) {
   s_window = window_create();
@@ -23,6 +26,7 @@ static void initialise_ui(void) {
   s_res_font_perfect_dos_48 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_PERFECT_DOS_48));
   s_res_gothic_18 = fonts_get_system_font(FONT_KEY_GOTHIC_18);
   s_res_image_bt_white = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BT_WHITE);
+  s_res_roboto_condensed_21 = fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21);
   // s_textlayer_time
   s_textlayer_time = text_layer_create(GRect(0, 54, 144, 60));
   text_layer_set_background_color(s_textlayer_time, GColorClear);
@@ -49,6 +53,22 @@ static void initialise_ui(void) {
   // s_layer_main
   s_layer_main = layer_create(GRect(0, 0, 144, 168));
   layer_add_child(window_get_root_layer(s_window), (Layer *)s_layer_main);
+  
+  // s_textlayer_date
+  s_textlayer_date = text_layer_create(GRect(11, 7, 70, 48));
+  text_layer_set_background_color(s_textlayer_date, GColorClear);
+  text_layer_set_text_color(s_textlayer_date, GColorWhite);
+  text_layer_set_text(s_textlayer_date, "Sunday");
+  text_layer_set_font(s_textlayer_date, s_res_roboto_condensed_21);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)s_textlayer_date);
+  
+  // s_textlayer_ampm
+  s_textlayer_ampm = text_layer_create(GRect(96, 29, 40, 30));
+  text_layer_set_background_color(s_textlayer_ampm, GColorBlack);
+  text_layer_set_text_color(s_textlayer_ampm, GColorWhite);
+  text_layer_set_text(s_textlayer_ampm, "AM");
+  text_layer_set_font(s_textlayer_ampm, s_res_roboto_condensed_21);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)s_textlayer_ampm);
 }
 
 static void destroy_ui(void) {
@@ -57,6 +77,8 @@ static void destroy_ui(void) {
   text_layer_destroy(s_textlayer_battery);
   bitmap_layer_destroy(s_bitmaplayer_bt);
   layer_destroy(s_layer_main);
+  text_layer_destroy(s_textlayer_date);
+  text_layer_destroy(s_textlayer_ampm);
   fonts_unload_custom_font(s_res_font_perfect_dos_48);
   gbitmap_destroy(s_res_image_bt_white);
 }
