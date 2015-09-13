@@ -1,6 +1,6 @@
 #include "progressbar.h"
 
-static void update_proc(Layer *layer, GContext *ctx)
+  static void update_proc(Layer *layer, GContext *ctx)
 {
   //Draw border
   GRect outer = layer_get_bounds(layer);

@@ -11,7 +11,10 @@ TextLayer *s_textlayer_ampm;
 TextLayer *s_textlayer_second;
 TextLayer *s_textlayer_bt;
 BitmapLayer *s_bitmaplayer_bt;
+
+
 ProgressBarLayer *pb_layer_battery;
+ProgressBarLayer *pb_layer_second;
 
 
 

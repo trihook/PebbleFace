@@ -5,11 +5,9 @@
   
 // BEGIN AUTO-GENERATED UI CODE; DO NOT MODIFY
 static Window *s_window;
-static GFont s_res_font_perfect_dos_48;
 static GFont s_res_gothic_18;
 static GBitmap *s_res_image_bt_white;
 static GFont s_res_roboto_condensed_21;
-static TextLayer *s_textlayer_time;
 static TextLayer *s_textlayer_battery;
 static BitmapLayer *s_bitmaplayer_bt;
 static Layer *s_layer_main;
@@ -23,19 +21,9 @@ static void initialise_ui(void) {
     window_set_fullscreen(s_window, true);
   #endif
   
-  s_res_font_perfect_dos_48 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_PERFECT_DOS_48));
   s_res_gothic_18 = fonts_get_system_font(FONT_KEY_GOTHIC_18);
   s_res_image_bt_white = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BT_WHITE);
   s_res_roboto_condensed_21 = fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21);
-  // s_textlayer_time
-  s_textlayer_time = text_layer_create(GRect(0, 54, 144, 60));
-  text_layer_set_background_color(s_textlayer_time, GColorClear);
-  text_layer_set_text_color(s_textlayer_time, GColorWhite);
-  text_layer_set_text(s_textlayer_time, "00:00");
-  text_layer_set_text_alignment(s_textlayer_time, GTextAlignmentCenter);
-  text_layer_set_font(s_textlayer_time, s_res_font_perfect_dos_48);
-  layer_add_child(window_get_root_layer(s_window), (Layer *)s_textlayer_time);
-  
   // s_textlayer_battery
   s_textlayer_battery = text_layer_create(GRect(71, 2, 55, 20));
   text_layer_set_background_color(s_textlayer_battery, GColorClear);
@@ -73,13 +61,11 @@ static void initialise_ui(void) {
 
 static void destroy_ui(void) {
   window_destroy(s_window);
-  text_layer_destroy(s_textlayer_time);
   text_layer_destroy(s_textlayer_battery);
   bitmap_layer_destroy(s_bitmaplayer_bt);
   layer_destroy(s_layer_main);
   text_layer_destroy(s_textlayer_date);
   text_layer_destroy(s_textlayer_ampm);
-  fonts_unload_custom_font(s_res_font_perfect_dos_48);
   gbitmap_destroy(s_res_image_bt_white);
 }
 // END AUTO-GENERATED UI CODE
